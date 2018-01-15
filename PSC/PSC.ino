@@ -7,7 +7,8 @@ CRGB leds[NUM_LEDS];
 void setup() {
   delay(2000);
   FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
-  FastLED.setBrightness(70);   FastLED.clear();
+  FastLED.setBrightness(70);   
+  FastLED.clear();
 }
 
 int p[]={1,2,3,4,5,6,7,8,11,28,31,32,33,34,25,14};
@@ -16,17 +17,17 @@ int c[]={91,88,71,72,73,74,75,76,77,78,81,98};
 
 void loop() {
   for(int i=0; i<16; i++){
-      leds[p[i]] = CRGB::DarkCyan;
+      leds[p[i]] = CRGB::Crimson;
       FastLED.show();
       FastLED.delay(100);
   }
   for(int i=0; i<15; i++){
-      leds[s[i]] = CRGB::RoyalBlue;
+      leds[s[i]] = CRGB::Cyan;
       FastLED.show();
       FastLED.delay(100);
   }
   for(int i=0; i<12; i++){
-      leds[c[i]] = CRGB::SlateBlue;
+      leds[c[i]] = CRGB::Yellow;
       FastLED.show();
       FastLED.delay(100);
   }
