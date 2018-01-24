@@ -14,7 +14,7 @@
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 cLEDText ScrollingMsg;
 
-const unsigned char TxtDemo[] = { EFFECT_HSV_CV "\x00\xff\xff\x40\xff\xff" "  HAPPY CHINESE NEW YEAR"
+unsigned char TxtDemo[] = { EFFECT_HSV_CV "\x00\xff\xff\x40\xff\xff" "  HAPPY CHINESE NEW YEAR"
                                   EFFECT_HSV_AH "\x00\xff\xff\xff\xff\xff" " - PSC"};
 
 
