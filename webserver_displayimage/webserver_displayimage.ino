@@ -4,6 +4,8 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 
+#define FASTLED_ESP8266_RAW_PIN_ORDER
+#define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 #define NUM_LEDS 100
 #define DATA_PIN 3
@@ -30,7 +32,7 @@ int m_skin_v2[]={13,14,16,24,33,35,44,45,46,47,52,53,54,55,65,66,72,73,83,85,86,
 int mario_delay = 200;
 
 void setup(void){
-  Serial.begin(115200);         // Start the Serial communication to send messages to the computer
+  Serial.begin(57600);         // Start the Serial communication to send messages to the computer
   delay(10);
   Serial.println('\n');
 
@@ -38,9 +40,10 @@ void setup(void){
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   FastLED.setBrightness(70); //Number 0-255
   FastLED.clear();
+  FastLED.setMaxRefreshRate(30);
 
-  wifiMulti.addAP("iPhone", "shuwei97");   // add Wi-Fi networks you want to connect to
-  wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
+  wifiMulti.addAP("PSC STAFF", "staff.psc321");   // add Wi-Fi networks you want to connect to
+  wifiMulti.addAP("iPhone", "shuwei97");
   wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
 
   Serial.println("Connecting ...");

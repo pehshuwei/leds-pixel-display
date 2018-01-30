@@ -45,12 +45,12 @@ void loop() {
 //  displayClear();
 //  displayCloud();
 //  displayDrizzle();
-//  displayRain();
+  displayRain();
 //  displayThunder();  
 //  displayAtmosphere();
 //  displaySnow();
-  displayAdditional();
-  displayExtreme();
+//  displayAdditional();
+//  displayExtreme();
 }
 
 void displayClear(){

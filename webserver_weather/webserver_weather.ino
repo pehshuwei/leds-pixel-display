@@ -2,12 +2,15 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h> 
 #include <ArduinoJson.h>
+
 //display
+#define FASTLED_ESP8266_RAW_PIN_ORDER
+#define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 #include <LEDMatrix.h>
 #include <LEDText.h>
 #include <FontMatrise.h>
-//display
+
 #define LED_PIN        3
 #define COLOR_ORDER    RGB
 #define CHIPSET        WS2811
@@ -15,34 +18,28 @@
 #define MATRIX_WIDTH   10
 #define MATRIX_HEIGHT  10
 #define MATRIX_TYPE    VERTICAL_ZIGZAG_MATRIX
-//weather
-#define TEMPBUFSZ 10
-#define WEATBUFSZ 15
-//display
+
 CRGB icon_leds[NUM_LEDS];
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 cLEDText ScrollingMsg;
+
+//weather
+#define TEMPBUFSZ 10
+#define WEATBUFSZ 15
+
+int  counter = 30;
+String weather = "";
+float Temperature;
+int weatherId;
+
 //network
 ESP8266WiFiMulti wifiMulti;     // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
-//const char* ssid     = "iPhone";      // SSID of local network
-//const char* password = "shuwei97";   // Password on network
 String APIKEY = "c3ddf9e303d30d910149f9ba1f9a6de4";
 String CityID = "1735106"; 
 
 WiFiClient client;
 char servername[]="api.openweathermap.org";  // remote server we will connect to
 String result;
-//weather
-int  counter = 30;
-
-String weather = "";
-//String weatherDescription = "";
-//String weatherLocation = "";
-//String Country;
-float Temperature;
-//float Humidity;
-//float Pressure;
-int weatherId;
 
 //display
 unsigned char connecting[] = "  connecting  ";
@@ -50,7 +47,6 @@ unsigned char conn[] = "  connected   ";
 unsigned char getting[] = "  getting data  ";
 unsigned char connfail[] = "  connection failed  ";
 unsigned char parsefail[] = "  parseObject() failed  ";
-//unsigned char psc[] = { EFFECT_HSV_AH "\x00\xff\xff\xff\xff\xff" " PSC" };
 
 //weather icon
 //Clear
@@ -76,70 +72,65 @@ int snow_flake[] = {13,15,17,21,24,27,31,33,35,37,39,43,44,45,51,52,53,54,56,57,
 int AE_void[] = {0,1,2,7,8,9,10,11,18,19,20,29,41,42,44,45,46,47,48,51,52,53,54,55,57,58,70,79,80,81,88,89,90,91,92,97,98,99};
 
 void setup() {
-  //Serial(57600)
-  Serial.begin(57600);
-  //display
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
-  FastLED.setBrightness(100);
-  FastLED.clear(true);
-  delay(500);
-  ScrollingMsg.SetFont(MatriseFontData);
-  ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 1);
-  ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
-
-  wifiMulti.addAP("PSC STAFF", "staff.psc321");   // add Wi-Fi networks you want to connect to
-  wifiMulti.addAP("iPhone", "shuwei97");
-
-  //display "connecting"
-  for(int x=0;x<(sizeof(connecting)*5);x++)
-  {
-      if (ScrollingMsg.UpdateText() == -1)
-        ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
-      else
-        FastLED.show();
-      delay(100);
-  }
+    Serial.begin(57600);
   
-//  WiFi.begin(ssid, password);
-  int i = 0;
-  while (wifiMulti.run() != WL_CONNECTED) { // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
-    delay(250);
-    Serial.print('.');
-  }
-  Serial.println('\n');
-  Serial.print("Connected to ");
-  Serial.println(WiFi.SSID());              // Tell us what network we're connected to
-  Serial.print("IP address:\t");
-  Serial.println(WiFi.localIP());           // Send the IP address of the ESP8266 to the computer
-
-  //display "connecting"
-  while (WiFi.status() != WL_CONNECTED) {
-      //Serial(57600)
-      Serial.print(".");
-      if (ScrollingMsg.UpdateText() == -1)
-        ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
-      else
-        FastLED.show();
-      delay(100);
-  }
+    //display
+    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
+    FastLED.setBrightness(100);
+    FastLED.clear(true);
+    FastLED.setMaxRefreshRate(30);
+    delay(500);
+    ScrollingMsg.SetFont(MatriseFontData);
+    ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 1);
+    ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
   
-  //display "connected" 
-  ScrollingMsg.SetText((unsigned char *)conn, sizeof(conn) - 1);
-  for(int x=0;x<(sizeof(conn)*5);x++)
-  {
-      if (ScrollingMsg.UpdateText() == -1)
-        ScrollingMsg.SetText((unsigned char *)conn, sizeof(conn) - 1);
-      else
-        FastLED.show();
-      delay(100);
-  }
-  //Serial(57600)
-  Serial.println("connected");
-  delay(1000);
+    //add Wi-Fi networks you want to connect to
+    wifiMulti.addAP("PSC STAFF", "staff.psc321");
+    wifiMulti.addAP("iPhone", "shuwei97");
+  
+    //display "connecting"
+    Serial.println("connecting");
+    for(int x=0;x<(sizeof(connecting)*5);x++)
+    {
+        if (ScrollingMsg.UpdateText() == -1)
+          ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
+        else
+          FastLED.show();
+        delay(100);
+    }
+
+    //Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
+    while (wifiMulti.run() != WL_CONNECTED) 
+    { 
+        delay(250);
+        Serial.print('.');
+        if (ScrollingMsg.UpdateText() == -1)
+          ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
+        else
+          FastLED.show();
+        delay(100);
+    }
+    Serial.println('\n');
+    Serial.print("Connected to ");
+    Serial.println(WiFi.SSID());    //Tell which network connected to
+    Serial.print("IP address:\t");
+    Serial.println(WiFi.localIP());   //IP address of the ESP8266
+    
+    //display "connected" 
+    ScrollingMsg.SetText((unsigned char *)conn, sizeof(conn) - 1);
+    for(int x=0;x<(sizeof(conn)*5);x++)
+    {
+        if (ScrollingMsg.UpdateText() == -1)
+          ScrollingMsg.SetText((unsigned char *)conn, sizeof(conn) - 1);
+        else
+          FastLED.show();
+        delay(100);
+    }
+    delay(1000);
 }
 
 void loop() {
-    if(counter == 30) //Get new data every 5 minutes
+    if(counter == 30) //Get new data every 30 counts
     {
         counter = 0;
         displayGettingData();
@@ -156,80 +147,71 @@ void loop() {
 
 void getWeatherData() //client function to send/receive GET request data.
 {
-  if (client.connect(servername, 80)) //starts client connection, checks for connection
-  {  
-      client.println("GET /data/2.5/weather?id="+CityID+"&units=metric&APPID="+APIKEY);
-      client.println("Host: api.openweathermap.org");
-      client.println("User-Agent: ArduinoWiFi/1.1");
-      client.println("Connection: close");
-      client.println();
-  } 
-  else 
-  {
-      //display "connection failed"
-      ScrollingMsg.SetText((unsigned char *)connfail, sizeof(connfail) - 1);
-      for(int x=0;x<(sizeof(connfail)*5);x++)
-      {
-          if (ScrollingMsg.UpdateText() == -1)
-            ScrollingMsg.SetText((unsigned char *)connfail, sizeof(connfail) - 1);
-          else
-            FastLED.show();
-          delay(100);
-      }
-  }
-
-  while(client.connected() && !client.available())
-  {
-      delay(1); //waits for data
-  }
-  while (client.connected() || client.available()) //connected or data available
-  { 
-      char c = client.read(); //gets byte from ethernet buffer
-      result = result+c;
-  }
-  client.stop(); //stop client
-  result.replace('[', ' ');
-  result.replace(']', ' ');
-  ////
-  Serial.println(result);
-
-  char jsonArray [result.length()+1];
-  result.toCharArray(jsonArray,sizeof(jsonArray));
-  jsonArray[result.length() + 1] = '\0';
+    result = "";
+    if (client.connect(servername, 80)) //starts client connection, checks for connection
+    {  
+        client.println("GET /data/2.5/weather?id="+CityID+"&units=metric&APPID="+APIKEY);
+        client.println("Host: api.openweathermap.org");
+        client.println("User-Agent: ArduinoWiFi/1.1");
+        client.println("Connection: close");
+        client.println();
+    } 
+    else 
+    {
+        //display "connection failed"
+        ScrollingMsg.SetText((unsigned char *)connfail, sizeof(connfail) - 1);
+        for(int x=0;x<(sizeof(connfail)*5);x++)
+        {
+            if (ScrollingMsg.UpdateText() == -1)
+              ScrollingMsg.SetText((unsigned char *)connfail, sizeof(connfail) - 1);
+            else
+              FastLED.show();
+            delay(100);
+        }
+    }
   
-  StaticJsonBuffer<1024> json_buf;
-  JsonObject &root = json_buf.parseObject(jsonArray);
-  if (!root.success())
-  {
-      //display "parseObject() failed"
-      ScrollingMsg.SetText((unsigned char *)parsefail, sizeof(parsefail) - 1);
-      for(int x=0;x<(sizeof(parsefail)*5);x++)
-      {
-          if (ScrollingMsg.UpdateText() == -1)
-            ScrollingMsg.SetText((unsigned char *)parsefail, sizeof(parsefail) - 1);
-          else
-            FastLED.show();
-          delay(100);
-      }
-  }
+    while(client.connected() && !client.available())
+    {
+        delay(1); //waits for data
+    }
+    while (client.connected() || client.available()) //connected or data available
+    { 
+        char c = client.read(); //gets byte from ethernet buffer
+        result = result+c;
+    }
+    client.stop(); //stop client
+    result.replace('[', ' ');
+    result.replace(']', ' ');
+    ////
+    Serial.println(result);
   
-//  String location = root["name"];
-//  String country = root["sys"]["country"];
-  float temperature = root["main"]["temp"];
-//  float humidity = root["main"]["humidity"];
-  String mainWeather = root["weather"]["main"];
-  int weather_id = root["weather"]["id"];
-//  String description = root["weather"]["description"];
-//  float pressure = root["main"]["pressure"];
-
+    char jsonArray [result.length()+1];
+    result.toCharArray(jsonArray,sizeof(jsonArray));
+    jsonArray[result.length() + 1] = '\0';
+    
+    StaticJsonBuffer<1024> json_buf;
+    JsonObject &root = json_buf.parseObject(jsonArray);
+    if (!root.success())
+    {
+        //display "parseObject() failed"
+        ScrollingMsg.SetText((unsigned char *)parsefail, sizeof(parsefail) - 1);
+        for(int x=0;x<(sizeof(parsefail)*5);x++)
+        {
+            if (ScrollingMsg.UpdateText() == -1)
+              ScrollingMsg.SetText((unsigned char *)parsefail, sizeof(parsefail) - 1);
+            else
+              FastLED.show();
+            delay(100);
+        }
+    }
+  
+    float temperature = root["main"]["temp"];
+    String mainWeather = root["weather"]["main"];
+    int weather_id = root["weather"]["id"];
+    
     weather = mainWeather;
     weatherId = weather_id;
-//  weatherDescription = description;
-//  weatherLocation = location;
-//  Country = country;
     Temperature = temperature;
-//  Humidity = humidity;
-//  Pressure = pressure;
 
 }
 
@@ -244,22 +226,14 @@ void displayWeather(float Temperature, String weather, int weatherId)
     unsigned char temp[TEMPBUFSZ] = "";  //create unsigned char array
     strcpy ((char*)temp, dest1); //convert char array dest1 to unsigned char array temp
 
-    //weather
-//    char dest2[WEATBUFSZ] = "  "; //set space in front for scroll
-//    char src2[WEATBUFSZ]; //to store weather
-//    weather.toCharArray(src2,WEATBUFSZ); //convert String to char array
-//    strcat(dest2,src2); //concat dest2 and src2 "  weather" to dest2
-//    unsigned char weat[WEATBUFSZ] = "";  //create unsigned char array
-//    strcpy ((char*)weat, dest2); //convert char array dest2 to unsigned char array weat
-
     //Serial(57600)
     Serial.println(dest1);
     Serial.println(weather);
     Serial.println(weatherId);
     
     //display temperature
-    ScrollingMsg.SetText((unsigned char *)temp, sizeof(temp) - 1);
     ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xce, 0xd1);
+    ScrollingMsg.SetText((unsigned char *)temp, sizeof(temp) - 1);
     for(int x=0;x<((sizeof(temp))*5);x++)
     {
         if (ScrollingMsg.UpdateText() == -1)
@@ -269,85 +243,46 @@ void displayWeather(float Temperature, String weather, int weatherId)
         delay(200);
     }
 
-    //display weather
-//    ScrollingMsg.SetText((unsigned char *)weat, sizeof(weat) - 1);
-//    ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0x8b, 0x8b);
-//    for(int y=0;y<((sizeof(weat))*6);y++)
-//    {
-//        if (ScrollingMsg.UpdateText() == -1)
-//          ScrollingMsg.SetText((unsigned char *)weat, sizeof(weat) - 1);
-//        else
-//          FastLED.show();
-//        delay(200);
-//    }
-
     FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(icon_leds, NUM_LEDS);
     //display weather icon
     if(weatherId>=200 && weatherId<300)
-    {
-      displayThunder();
-    }
+    {   displayThunder();}
     else if(weatherId>=300 && weatherId<400)
-    {
-      displayDrizzle();
-    }
+      {   displayDrizzle();}
     else if(weatherId>=500 && weatherId<600)
-    {
-      displayRain();
-    }
+    {   displayRain();}
     else if(weatherId>=600 && weatherId<700)
-    {
-      displaySnow();
-    }
+    {   displaySnow();}
     else if(weatherId>=700 && weatherId<800)
-    {
-      displayAtmosphere();
-    }
+    {   displayAtmosphere();}
     else if(weatherId==800)
-    {
-      displayClear();
-    }
+    {   displayClear();}
     else if(weatherId>800 && weatherId<900)
-    {
-      displayCloud();
-    }
+    {   displayCloud();}
     else if(weatherId>=900 && weatherId<910)
-    {
-      displayExtreme();
-    }
+    {   displayExtreme();}
     else if(weatherId>=910 && weatherId<1000)
-    {
-      displayAdditional();
-    }
+    {   displayAdditional();}
     FastLED.clear(true);
     FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
 
-    //display psc
-//    ScrollingMsg.SetText((unsigned char *)psc, sizeof(psc) - 1);
-//    for(int z=0;z<((sizeof(psc))*5);z++)
-//    {
-//        if (ScrollingMsg.UpdateText() == -1)
-//          ScrollingMsg.SetText((unsigned char *)psc, sizeof(psc) - 1);
-//        else
-//          FastLED.show();
-//        delay(200);
-//    }
+    ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0xff, 0xff, 0xff);
 }
 
 void displayGettingData()
 {
-  //display getting data
-  ScrollingMsg.SetText((unsigned char *)getting, sizeof(getting) - 1);
-  for(int x=0;x<(sizeof(getting)*5);x++)
-  {
-    if (ScrollingMsg.UpdateText() == -1)
-      ScrollingMsg.SetText((unsigned char *)getting, sizeof(getting) - 1);
-    else
-      FastLED.show();
-    delay(100);
-  }
-  //Serial(57600)
-  Serial.println("getting data");
+    //Serial(57600)
+    Serial.println("getting data");
+    //display getting data
+    ScrollingMsg.SetText((unsigned char *)getting, sizeof(getting) - 1);
+    for(int x=0;x<(sizeof(getting)*5);x++)
+    {
+      if (ScrollingMsg.UpdateText() == -1)
+        ScrollingMsg.SetText((unsigned char *)getting, sizeof(getting) - 1);
+      else
+        FastLED.show();
+      delay(100);
+    }
 }
 
 void displayClear(){

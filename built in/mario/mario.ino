@@ -1,4 +1,6 @@
-#include "FastLED.h"
+#define FASTLED_ESP8266_RAW_PIN_ORDER
+#define FASTLED_ALLOW_INTERRUPTS 0
+#include <FastLED.h>
 #define NUM_LEDS 100
 #define DATA_PIN 3
 
@@ -7,8 +9,9 @@ CRGB leds[NUM_LEDS];
 void setup() {
   delay(2000);
   FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
-  FastLED.setBrightness(70); //Number 0-255
+  FastLED.setBrightness(100); //Number 0-255
   FastLED.clear();
+  FastLED.setMaxRefreshRate(30);
 }
 
 //mario
@@ -18,7 +21,7 @@ int m_bibshort[]={37,38,41,42,43,57,58,61,62,63};
 int m_shoe[]={20,39,60,79};
 int m_skin_v1[]={13,14,17,24,33,35,44,45,46,47,52,53,54,55,65,66,72,73,82,85,86,94};
 int m_skin_v2[]={13,14,16,24,33,35,44,45,46,47,52,53,54,55,65,66,72,73,83,85,86,94};
-int mario_delay = 200;
+int mario_delay = 300;
 
 void loop() {
   
