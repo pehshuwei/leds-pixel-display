@@ -1,16 +1,3 @@
-#include "FastLED.h"
-#define NUM_LEDS 100
-#define DATA_PIN 3
-
-CRGB leds[NUM_LEDS];
-
-void setup() {
-  delay(2000);
-  FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
-  FastLED.setBrightness(70);
-  FastLED.clear();
-}
-
 //general
 int gloop = 6;
 int gdelay = 300;
@@ -60,9 +47,11 @@ int flower_eye_v2[]={47,67};
 int flower_leaf_v1[]={2,17,18,20,21,39,40,41,42,43,44,59,60,61,62,76,77,78,83};
 int flower_leaf_v2[]={3,16,17,18,20,21,22,39,40,41,42,56,59,60,61,64,77,78,82};
 
-
-void loop() {
-
+//If a POST request is made to URI /mario
+void displayMario() {
+  Serial.println("displayMario()");
+  
+  FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   //coin
   for(int i=0;i<sloop;i++){
       fill_solid(leds, NUM_LEDS, CRGB::DarkOrange);
@@ -243,5 +232,7 @@ void loop() {
       FastLED.show();
       FastLED.delay(gdelay);
   }
-  
+
+  server.sendHeader("Location","/");        // Add a header to respond with a new location for the browser to go to the home page again
+  server.send(303);                         // Send it back to the browser with an HTTP status 303 (See Other) to redirect
 }

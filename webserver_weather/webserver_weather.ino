@@ -19,8 +19,8 @@
 #define MATRIX_HEIGHT  10
 #define MATRIX_TYPE    VERTICAL_ZIGZAG_MATRIX
 
-CRGB icon_leds[NUM_LEDS];
-cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
+CRGB leds[NUM_LEDS];
+cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> text_leds;
 cLEDText ScrollingMsg;
 
 //weather
@@ -75,18 +75,18 @@ void setup() {
     Serial.begin(57600);
   
     //display
-    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
+    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(text_leds[0], text_leds.Size());
     FastLED.setBrightness(100);
     FastLED.clear(true);
     FastLED.setMaxRefreshRate(30);
     delay(500);
     ScrollingMsg.SetFont(MatriseFontData);
-    ScrollingMsg.Init(&leds, leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 1);
+    ScrollingMsg.Init(&text_leds, text_leds.Width(), ScrollingMsg.FontHeight() + 1, 0, 1);
     ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
   
     //add Wi-Fi networks you want to connect to
     wifiMulti.addAP("PSC STAFF", "staff.psc321");
-    wifiMulti.addAP("iPhone", "shuwei97");
+    wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
   
     //display "connecting"
     Serial.println("connecting");
@@ -222,7 +222,7 @@ void displayWeather(float Temperature, String weather, int weatherId)
     char src1[TEMPBUFSZ]; //to store Temperature
     dtostrf(Temperature, 4, 1, src1); //convert float to char array
     strcat(dest1,src1); //concat dest1 and src1 "  99.99" to dest1
-    strcat(dest1,"C"); //concat dest1 and "C" "  99.99C" to dest1
+    strcat(dest1,"°C"); //concat dest1 and "C" "  99.99C" to dest1
     unsigned char temp[TEMPBUFSZ] = "";  //create unsigned char array
     strcpy ((char*)temp, dest1); //convert char array dest1 to unsigned char array temp
 
@@ -243,7 +243,7 @@ void displayWeather(float Temperature, String weather, int weatherId)
         delay(200);
     }
 
-    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(icon_leds, NUM_LEDS);
+    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS);
     //display weather icon
     if(weatherId>=200 && weatherId<300)
     {   displayThunder();}
@@ -264,7 +264,7 @@ void displayWeather(float Temperature, String weather, int weatherId)
     else if(weatherId>=910 && weatherId<1000)
     {   displayAdditional();}
     FastLED.clear(true);
-    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds[0], leds.Size());
+    FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(text_leds[0], text_leds.Size());
 
     ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0xff, 0xff, 0xff);
 }
@@ -287,9 +287,9 @@ void displayGettingData()
 
 void displayClear(){
   //Clear
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<45; i++){
-    icon_leds[sun[i]] = CRGB::Orange;
+    leds[sun[i]] = CRGB::Orange;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -297,12 +297,12 @@ void displayClear(){
 
 void displayCloud(){
   //Cloud
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<34; i++){
-    icon_leds[cloud[i]] = CRGB::Cyan;
+    leds[cloud[i]] = CRGB::Cyan;
   }
   for(int i=0; i<15; i++){
-    icon_leds[smallcloud[i]] = CRGB::RoyalBlue;
+    leds[smallcloud[i]] = CRGB::RoyalBlue;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -310,15 +310,15 @@ void displayCloud(){
 
 void displayDrizzle(){
   //Drizzle
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<25; i++){
-    icon_leds[condition_cloud[i]] = CRGB::RoyalBlue;
+    leds[condition_cloud[i]] = CRGB::RoyalBlue;
   }
   for(int i=0; i<9; i++){
-    icon_leds[condition_smallcloud[i]] = CRGB::DarkGray;
+    leds[condition_smallcloud[i]] = CRGB::DarkGray;
   }
   for(int i=0; i<5; i++){
-    icon_leds[drizzle[i]] = CRGB::Cyan;
+    leds[drizzle[i]] = CRGB::Cyan;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -326,15 +326,15 @@ void displayDrizzle(){
 
 void displayRain(){
   //Rain
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<25; i++){
-    icon_leds[condition_cloud[i]] = CRGB::RoyalBlue;
+    leds[condition_cloud[i]] = CRGB::RoyalBlue;
   }
   for(int i=0; i<9; i++){
-    icon_leds[condition_smallcloud[i]] = CRGB::DarkGray;
+    leds[condition_smallcloud[i]] = CRGB::DarkGray;
   }
   for(int i=0; i<17; i++){
-    icon_leds[rain[i]] = CRGB::Cyan;
+    leds[rain[i]] = CRGB::Cyan;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -342,15 +342,15 @@ void displayRain(){
 
 void displayThunder(){
   //Thunder
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<25; i++){
-    icon_leds[condition_cloud[i]] = CRGB::RoyalBlue;
+    leds[condition_cloud[i]] = CRGB::RoyalBlue;
   }
   for(int i=0; i<9; i++){
-    icon_leds[condition_smallcloud[i]] = CRGB::DarkGray;
+    leds[condition_smallcloud[i]] = CRGB::DarkGray;
   }
   for(int i=0; i<22; i++){
-    icon_leds[thunder[i]] = CRGB::Yellow;
+    leds[thunder[i]] = CRGB::Yellow;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -358,9 +358,9 @@ void displayThunder(){
 
 void displayAtmosphere(){
   //Atmosphere
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<30; i++){
-    icon_leds[atmosphere[i]] = CRGB::Gray;
+    leds[atmosphere[i]] = CRGB::Gray;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -368,12 +368,12 @@ void displayAtmosphere(){
 
 void displaySnow(){
   //Snow
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Black);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<19; i++){
-    icon_leds[snow_frame[i]] = CRGB::SlateGray;
+    leds[snow_frame[i]] = CRGB::SlateGray;
   }
   for(int i=0; i<36; i++){
-    icon_leds[snow_flake[i]] = CRGB::White;
+    leds[snow_flake[i]] = CRGB::White;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -381,9 +381,9 @@ void displaySnow(){
 
 void displayAdditional(){
   //Additional
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Yellow);
+  fill_solid(leds, NUM_LEDS, CRGB::Yellow);
   for(int i=0; i<38; i++){
-    icon_leds[AE_void[i]] = CRGB::Black;
+    leds[AE_void[i]] = CRGB::Black;
   }
   FastLED.show();
   FastLED.delay(10000);
@@ -391,9 +391,9 @@ void displayAdditional(){
 
 void displayExtreme(){
   //Extreme
-  fill_solid(icon_leds, NUM_LEDS, CRGB::Red);
+  fill_solid(leds, NUM_LEDS, CRGB::Red);
   for(int i=0; i<38; i++){
-    icon_leds[AE_void[i]] = CRGB::Black;
+    leds[AE_void[i]] = CRGB::Black;
   }
   FastLED.show();
   FastLED.delay(10000);
