@@ -14,3 +14,7 @@ void setDisplay4(){
   selected = 4;
 }
 
+void setDisplay5(){
+  selected = 5;
+}
+

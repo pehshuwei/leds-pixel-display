@@ -50,6 +50,7 @@ int flower_leaf_v2[]={3,16,17,18,20,21,22,39,40,41,42,56,59,60,61,64,77,78,82};
 //If a POST request is made to URI /mario
 void displayMario() {
   Serial.println("displayMario()");
+  int  counter = 30;
   
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   //coin

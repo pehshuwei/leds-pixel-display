@@ -34,7 +34,7 @@ void displayWeather(){
     else
     {
         counter++;
-        displayWeather(Temperature,weather,weatherId);
+        displayData(Temperature,weather,weatherId);
         delay(100);
     }
     server.sendHeader("Location","/");        // Add a header to respond with a new location for the browser to go to the home page again
@@ -78,7 +78,6 @@ void getWeatherData() //client function to send/receive GET request data.
     client.stop(); //stop client
     result.replace('[', ' ');
     result.replace(']', ' ');
-    ////
     Serial.println(result);
   
     char jsonArray [result.length()+1];
@@ -111,7 +110,7 @@ void getWeatherData() //client function to send/receive GET request data.
 
 }
 
-void displayWeather(float Temperature, String weather, int weatherId)
+void displayData(float Temperature, String weather, int weatherId)
 {    
     //Temperature
     char dest1[TEMPBUFSZ] = "  "; //set space in front for scroll

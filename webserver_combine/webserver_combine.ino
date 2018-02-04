@@ -45,7 +45,7 @@ void setDisplay3();
 void setDisplay4();
 void handleNotFound();
 
-byte selected = 0;
+byte selected = 4;
 
 void setup(void) {
     Serial.begin(57600);
@@ -121,6 +121,7 @@ void setup(void) {
     server.on("/mario", HTTP_POST, setDisplay2);
     server.on("/chessboard", HTTP_POST, setDisplay3);
     server.on("/weather", HTTP_POST, setDisplay4);
+    server.on("/text", HTTP_POST, setDisplay5);
 
     server.onNotFound(handleNotFound);        // When a client requests an unknown URI (i.e. something other than "/"), call function "handleNotFound"
   
@@ -131,7 +132,7 @@ void setup(void) {
 void loop() {
     // Listen for HTTP requests from clients
     server.handleClient();
-  
+    
     switch(selected)
     {
       case 0:
@@ -147,7 +148,10 @@ void loop() {
         break;
       case 4:
         displayWeather();
-        break;        
+        break;
+      case 5:
+        displayText();
+        break;
     }
 }
 
