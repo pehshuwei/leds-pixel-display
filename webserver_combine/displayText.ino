@@ -19,7 +19,8 @@ void displayText(){
     Serial.println((char*)currentMsg);
     
     //display text
-    ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xce, 0xd1);
+//    ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xce, 0xd1);
+    ScrollingMsg.SetTextColrOptions(COLR_HSV | COLR_GRAD_AH, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff);
     ScrollingMsg.SetText((unsigned char *)currentMsg, sizeof(currentMsg) - 1);
     for(int x=0;x<((sizeof(currentMsg))*5);x++)
     {
