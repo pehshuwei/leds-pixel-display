@@ -10,7 +10,7 @@ void displayText(){
     char dest2[TEXTBUFSZ] = "  "; //set space in front for scroll
     char src2[TEXTBUFSZ];//to store text inserted
     if(server.hasArg("text")){
-      currentMsg[TEXTBUFSZ] = "";
+      memset(currentMsg, 0, TEXTBUFSZ);
       server.arg("text").toCharArray(src2,TEXTBUFSZ); //convert String to char array
       strcat(dest2,src2); //concat dest2 and src2 "  text" to dest2
       strcpy ((char*)currentMsg, dest2); //convert char array dest2 to unsigned char array text
