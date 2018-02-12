@@ -39,6 +39,9 @@ unsigned char conn[] = "  connected   ";
 ESP8266WiFiMulti wifiMulti;     // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 ESP8266WebServer server(80);    // Create a webserver object that listens for HTTP request on port 80
 WiFiClient client;
+IPAddress ip(10,0,20,200);   
+IPAddress gateway(10,0,0,1);   
+IPAddress subnet(255,255,255,0);  
 
 //function prototypes for HTTP handlers
 void handleCase();
@@ -47,13 +50,14 @@ void setDisplay1();
 void setDisplay2();
 void setDisplay3();
 void setDisplay4();
+void setDisplay5();
 void handleNotFound();
 
 //global variable init
 byte selected = 4;
 int counter = 30;
 
-TimedAction caseThread = TimedAction(1000,handleCase);
+TimedAction caseThread = TimedAction(100,handleCase);
 
 void setup(void) {
     Serial.begin(57600);
@@ -69,8 +73,8 @@ void setup(void) {
     delay(500);
 
     //network - add Wi-Fi networks you want to connect to
-    wifiMulti.addAP("PSC STAFF", "staff.psc321");
-    wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
+    wifiMulti.addAP("ssid_from_AP_1", "password_for_AP_1");
+    wifiMulti.addAP("ssid_from_AP_2", "password_for_AP_2");
 
     //display "connecting"
     Serial.println("Connecting");
@@ -94,6 +98,8 @@ void setup(void) {
           FastLED.show();
         delay(100);
     }
+    WiFi.config(ip, gateway, subnet);
+
     Serial.println('\n');
     Serial.print("Connected to ");
     Serial.println(WiFi.SSID());   //Tell which network connected to
@@ -137,9 +143,9 @@ void setup(void) {
 }
 
 void loop() {
+    server.handleClient();
     //check for request every 1 sec
     caseThread.check();
-    
 }
 
 void handleNotFound(){

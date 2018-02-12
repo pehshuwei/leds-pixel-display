@@ -15,7 +15,7 @@ void displayChessboard() {
     leds[black[i]] = CRGB::Black;
   }
   FastLED.show();
-  FastLED.delay(1000);
+  FastLED.delay(5000);
 
   server.sendHeader("Location","/");        // Add a header to respond with a new location for the browser to go to the home page again
   server.send(303);                         // Send it back to the browser with an HTTP status 303 (See Other) to redirect

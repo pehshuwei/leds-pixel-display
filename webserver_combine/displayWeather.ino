@@ -18,6 +18,9 @@ unsigned char getting[] = "  getting data  ";
 unsigned char connfail[] = "  connection failed  ";
 unsigned char parsefail[] = "  parseObject() failed  ";
 
+void displayGettingData();
+void getWeatherData();
+
 //If a POST request is made to URI /weather
 void displayWeather(){
   
