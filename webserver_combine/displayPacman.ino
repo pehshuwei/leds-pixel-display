@@ -33,7 +33,7 @@ int sad_ghost_blink_loop = 5;
 //If a POST request is made to URI /pacman
 void displayPacman(){
   Serial.println("displayPacman()");
-  int  counter = 30;
+  counter = 30;
   
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   //PACMAN

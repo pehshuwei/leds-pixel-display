@@ -4,7 +4,7 @@ int black[]={12,14,16,18,22,24,26,28,32,34,36,38,42,44,46,48,52,54,56,58,62,64,6
 //If a POST request is made to URI /chessboard
 void displayChessboard() {
   Serial.println("displayChessboard()");
-  int  counter = 30;
+  counter = 30;
   
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   fill_solid(leds, NUM_LEDS, CRGB::DarkCyan);

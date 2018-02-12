@@ -1,9 +1,12 @@
-//network - libraries
+//ibraries
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WiFiMulti.h> 
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
+
+//thread - libraries
+#include <TimedAction.h>
 
 //weather - libraries
 #include <ArduinoJson.h>
@@ -38,6 +41,7 @@ ESP8266WebServer server(80);    // Create a webserver object that listens for HT
 WiFiClient client;
 
 //function prototypes for HTTP handlers
+void handleCase();
 void handleRoot();              
 void setDisplay1();
 void setDisplay2();
@@ -45,7 +49,11 @@ void setDisplay3();
 void setDisplay4();
 void handleNotFound();
 
+//global variable init
 byte selected = 4;
+int counter = 30;
+
+TimedAction caseThread = TimedAction(1000,handleCase);
 
 void setup(void) {
     Serial.begin(57600);
@@ -61,9 +69,8 @@ void setup(void) {
     delay(500);
 
     //network - add Wi-Fi networks you want to connect to
-    wifiMulti.addAP("iPhone", "shuwei97");
     wifiMulti.addAP("PSC STAFF", "staff.psc321");
-    wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
+    wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
 
     //display "connecting"
     Serial.println("Connecting");
@@ -79,7 +86,7 @@ void setup(void) {
     //network - Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
     while (wifiMulti.run() != WL_CONNECTED) 
     { 
-        delay(250);
+        delay(1000);
         Serial.print('.');
         if (ScrollingMsg.UpdateText() == -1)
           ScrollingMsg.SetText((unsigned char *)connecting, sizeof(connecting) - 1);
@@ -105,7 +112,7 @@ void setup(void) {
     }
 
     //dns
-    if (!MDNS.begin("esp8266")) {             // Start the mDNS responder for esp8266.local
+    if (!MDNS.begin("pixeldisplay")) {             // Start the mDNS responder for pixeldisplay.local
         Serial.println("Error setting up MDNS responder!");
     }
     else{
@@ -130,32 +137,12 @@ void setup(void) {
 }
 
 void loop() {
-    // Listen for HTTP requests from clients
-    server.handleClient();
+    //check for request every 1 sec
+    caseThread.check();
     
-    switch(selected)
-    {
-      case 0:
-        break;
-      case 1:
-        displayPacman();
-        break;
-      case 2:
-        displayMario();
-        break;
-      case 3:
-        displayChessboard();
-        break;
-      case 4:
-        displayWeather();
-        break;
-      case 5:
-        displayText();
-        break;
-    }
 }
 
 void handleNotFound(){
-  server.send(404, "text/plain", "404: Not found"); // Send HTTP status 404 (Not Found) when there's no handler for the URI in the request
+   server.send(404, "text/plain", "404: Not found"); // Send HTTP status 404 (Not Found) when there's no handler for the URI in the request
 }
 

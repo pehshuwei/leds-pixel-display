@@ -2,7 +2,6 @@
 #define TEMPBUFSZ 10
 #define WEATBUFSZ 15
 
-int  counter = 30;
 String weather = "";
 float Temperature;
 int weatherId;
@@ -21,6 +20,7 @@ unsigned char parsefail[] = "  parseObject() failed  ";
 
 //If a POST request is made to URI /weather
 void displayWeather(){
+  
     Serial.println("displayWeather()");
   
     FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(text_leds[0], text_leds.Size());
@@ -33,6 +33,9 @@ void displayWeather(){
     }
     else
     {
+        char loopCount[50];
+        sprintf(loopCount, "Loop %d", counter);
+        Serial.println(loopCount);
         counter++;
         displayData(Temperature,weather,weatherId);
         delay(100);
@@ -43,6 +46,7 @@ void displayWeather(){
 
 void getWeatherData() //client function to send/receive GET request data.
 {
+    unsigned long timeStart = millis();
     result = "";
     if (client.connect(servername, 80)) //starts client connection, checks for connection
     {  
@@ -78,6 +82,9 @@ void getWeatherData() //client function to send/receive GET request data.
     client.stop(); //stop client
     result.replace('[', ' ');
     result.replace(']', ' ');
+    unsigned long timeStop = millis();
+    double rate = (timeStop - timeStart)/ 1000.0;
+    Serial.println(rate);
     Serial.println(result);
   
     char jsonArray [result.length()+1];

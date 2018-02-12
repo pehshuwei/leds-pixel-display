@@ -5,6 +5,8 @@ unsigned char currentMsg[TEXTBUFSZ] = "";
 //If a POST request is made to URI /text
 void displayText(){
     Serial.println("displayText()");
+    counter = 30;
+    
     FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(text_leds[0], text_leds.Size());
     //Text
     char dest2[TEXTBUFSZ] = "  "; //set space in front for scroll
@@ -19,7 +21,6 @@ void displayText(){
     Serial.println((char*)currentMsg);
     
     //display text
-//    ScrollingMsg.SetTextColrOptions(COLR_RGB | COLR_SINGLE, 0x00, 0xce, 0xd1);
     ScrollingMsg.SetTextColrOptions(COLR_HSV | COLR_GRAD_AH, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff);
     ScrollingMsg.SetText((unsigned char *)currentMsg, sizeof(currentMsg) - 1);
     for(int x=0;x<((sizeof(currentMsg))*5);x++)
