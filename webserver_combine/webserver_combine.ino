@@ -39,7 +39,7 @@ unsigned char conn[] = "  connected   ";
 ESP8266WiFiMulti wifiMulti;     // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 ESP8266WebServer server(80);    // Create a webserver object that listens for HTTP request on port 80
 WiFiClient client;
-IPAddress ip(10,0,20,200);   
+IPAddress ip(10,0,55,240);   
 IPAddress gateway(10,0,0,1);   
 IPAddress subnet(255,255,255,0);  
 
@@ -57,7 +57,7 @@ void handleNotFound();
 byte selected = 4;
 int counter = 30;
 
-TimedAction caseThread = TimedAction(100,handleCase);
+TimedAction caseThread = TimedAction(1000,handleCase);
 
 void setup(void) {
     Serial.begin(57600);
@@ -73,7 +73,7 @@ void setup(void) {
     delay(500);
 
     //network - add Wi-Fi networks you want to connect to
-    wifiMulti.addAP("ssid_from_AP_1", "password_for_AP_1");
+    wifiMulti.addAP("PSC STAFF", "staff.psc321");
     wifiMulti.addAP("ssid_from_AP_2", "password_for_AP_2");
 
     //display "connecting"

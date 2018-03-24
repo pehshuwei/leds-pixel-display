@@ -2,6 +2,7 @@
 const char * htmlMessage = "<!DOCTYPE html>"
 "<html>"
 "<head>"
+  "<title>Pixel Display</title>"
   "<link href=\"https://fonts.googleapis.com/css?family=Montserrat:400\" rel=\"stylesheet\">"
   "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"
   "<style>"
