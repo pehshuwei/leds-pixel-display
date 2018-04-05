@@ -73,7 +73,7 @@ void setup(void) {
     delay(500);
 
     //network - add Wi-Fi networks you want to connect to
-    wifiMulti.addAP("PSC STAFF", "staff.psc321");
+    wifiMulti.addAP("ssid_from_AP_1", "password_for_AP_1");
     wifiMulti.addAP("ssid_from_AP_2", "password_for_AP_2");
 
     //display "connecting"
