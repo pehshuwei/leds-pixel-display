@@ -11,10 +11,10 @@ Folder [webserver_combine](https://github.com/pehshuwei/leds-pixel-display/tree/
 
 ## Code
 
-Programmed in C/C++ with Arduino IDE, and some HTML and CSS in between for the web page.
+Programmed in C/C++ with Arduino IDE, and some HTML and CSS in between for the webpage.
 
-#### The web page
-![web page](https://github.com/pehshuwei/leds-pixel-display/blob/master/screenshot/page.PNG)
+#### The webpage
+![webpage](https://github.com/pehshuwei/leds-pixel-display/blob/master/screenshot/page.PNG)
 
 ### ESPresso Lite V2.0
 In this project, [ESPresso Lite V2.0](http://learn.espressolite.com/) works as the web server for the display because it has the WiFi module. 
