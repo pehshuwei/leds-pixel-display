@@ -2,13 +2,19 @@
 A 10x10 pixels IoT display that can be controlled through a webpage. 
 **ESPresso Lite V2.0** and **WS2811 Addressable LEDs strip** are used in this project, coded with Arduino IDE. 
 
-Folder [webserver_combine](https://github.com/pehshuwei/leds-pixel-display/tree/master/webserver_combine) is the code for the project.
+Refer to [LEDs Pixel Display](https://www.pehshuwei.me/src/sw_project_pixeldisplay.html) for more detials. Folder [webserver_combine](https://github.com/pehshuwei/leds-pixel-display/tree/master/webserver_combine) is the sketch for the project.
 
 ### The display
 ![display](https://github.com/pehshuwei/leds-pixel-display/blob/master/image/display.jpg)
 
 ### The webpage
 ![webpage](https://github.com/pehshuwei/leds-pixel-display/blob/master/image/webpage.png)
+
+## How does it work?
+1. Connect to the wifi that the display connected to.
+2. Open browser.
+3. Go to pixeldisplay.local/, and you will see a webpage.
+4. Click the function that you want it to display.
 
 ## The 3 main functions the display can show are
 - Built-in image sets such as Pacman, Mario, and Chessboard
@@ -39,5 +45,5 @@ LEDs are controlled by [LEDText library](https://github.com/AaronLiddiment/LEDTe
 ### Temperature and weather
 When the "Weather" button is clicked, temperature and icon for current weather will be displayed. 
 
-The data is from [OpenWeatherMap](http://openweathermap.org/) through [Weather API](http://openweathermap.org/api) with [ArduinoJson](https://github.com/bblanchon/ArduinoJson). 
+The data is from [OpenWeatherMap](http://openweathermap.org/) through [Weather API](http://openweathermap.org/api) with [ArduinoJson](https://arduinojson.org/). 
 Display includes text and weather icons sets, which uses [FastLED](https://github.com/FastLED/FastLED) and [LEDText](https://github.com/AaronLiddiment/LEDText) libraries.
