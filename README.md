@@ -2,7 +2,7 @@
 A 10x10 pixels IoT display that can be controlled through a webpage. 
 **ESPresso Lite V2.0** and **WS2811 Addressable LEDs strip** are used in this project, coded with Arduino IDE. 
 
-Refer to [LEDs Pixel Display](https://www.pehshuwei.me/src/sw_project_pixeldisplay.html) for more detials. Folder [webserver_combine](https://github.com/pehshuwei/leds-pixel-display/tree/master/webserver_combine) is the sketch for the project.
+Refer to [LEDs Pixel Display](https://www.pehshuwei.me/projects/pixeldisplay) for more details. Folder [webserver_combine](https://github.com/pehshuwei/leds-pixel-display/tree/master/webserver_combine) is the sketch for the project.
 
 ### The display
 ![display](https://github.com/pehshuwei/leds-pixel-display/blob/master/image/display.jpg)
