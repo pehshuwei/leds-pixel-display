@@ -2,8 +2,12 @@
 //Clear
 int sun[] = {4,5,11,12,14,15,17,18,21,22,27,28,34,35,40,41,43,44,45,46,48,49,50,51,53,54,55,56,58,59,64,65,71,72,77,78,81,82,84,85,87,88,94,95};
 //Cloud
-int cloud[] = {2,3,4,13,14,15,16,17,22,23,24,25,26,33,34,35,36,37,42,43,44,45,54,55,56,57,62,63,64,65,77,76,82,83};
-int smallcloud[] = {46,52,53,66,67,68,71,72,73,74,85,86,87,93,94};
+//int cloud[] = {2,3,4,13,14,15,16,17,22,23,24,25,26,33,34,35,36,37,42,43,44,45,54,55,56,57,62,63,64,65,77,76,82,83};
+//int smallcloud[] = {46,52,53,66,67,68,71,72,73,74,85,86,87,93,94};
+Cloud (cloud&sun)
+int cloud[] = {1,2,3,14,15,16,17,18,21,22,23,24,25,34,35,36,37,38,41,42,43,44,55,56,57,58,61,62,63,64,77,78,81,82};
+int cloudsun[] = {53,54,65,66,73,74,75};
+int cloudsun_dots[] = {32,51,71,92,94,96};
 //Condition cloud
 int condition_cloud[] = {13,14,25,26,27,31,32,33,34,45,46,47,48,52,53,54,65,66,67,73,74,85,86,93,94};
 int condition_smallcloud[] = {51,68,69,70,71,72,87,88,92};
@@ -32,16 +36,45 @@ void displayClear(){
 }
 
 void displayCloud(){
-  //Cloud
+  //cloud + sun
   fill_solid(leds, NUM_LEDS, CRGB::Black);
   for(int i=0; i<34; i++){
     leds[cloud[i]] = CRGB::Cyan;
   }
-  for(int i=0; i<15; i++){
-    leds[smallcloud[i]] = CRGB::RoyalBlue;
+  for(int i=0; i<7; i++){
+    leds[cloudsun[i]] = CRGB::Orange;
   }
   FastLED.show();
-  FastLED.delay(10000);
+  FastLED.delay(1000);
+  for(int i=0; i<6; i++){
+    leds[cloudsun_dots[i]] = CRGB::Orange;
+  }
+  FastLED.show();
+  FastLED.delay(2000);
+  // 2 loops to flick the dots beside  
+  for(int i=0; i<2; i++){
+      for(int i=0; i<6; i++){
+        leds[cloudsun_dots[i]] = CRGB::Black;
+      }
+      FastLED.show();
+      FastLED.delay(1000);
+      for(int i=0; i<6; i++){
+        leds[cloudsun_dots[i]] = CRGB::Orange;
+      }
+      FastLED.show();
+      FastLED.delay(2000);
+  } 
+    
+  //Cloud
+//  fill_solid(leds, NUM_LEDS, CRGB::Black);
+//  for(int i=0; i<34; i++){
+//    leds[cloud[i]] = CRGB::Cyan;
+//  }
+//  for(int i=0; i<15; i++){
+//    leds[smallcloud[i]] = CRGB::RoyalBlue;
+//  }
+//  FastLED.show();
+//  FastLED.delay(10000);
 }
 
 void displayDrizzle(){
