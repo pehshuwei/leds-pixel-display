@@ -47,3 +47,23 @@ When the "Weather" button is clicked, temperature and icon for current weather w
 
 The data is from [OpenWeatherMap](http://openweathermap.org/) through [Weather API](http://openweathermap.org/api) with [ArduinoJson](https://arduinojson.org/). 
 Display includes text and weather icons sets, which uses [FastLED](https://github.com/FastLED/FastLED) and [LEDText](https://github.com/AaronLiddiment/LEDText) libraries.
+
+## Libraries
+- ESP8266WiFi
+- WiFiClient
+- ESP8266WiFiMulti
+- ESP8266mDNS
+- ESP8266WebServer
+
+### Thread
+- [TimedAction](https://playground.arduino.cc/Code/TimedAction)
+
+### Weather 
+- [ArduinoJson](https://arduinojson.org/)
+
+### Display
+- [FastLED](https://github.com/FastLED/FastLED)
+- [LEDText](https://github.com/AaronLiddiment/LEDText)
+- [LEDMatrix](https://github.com/AaronLiddiment/LEDMatrix)
+- [FontMatrise](https://github.com/FastLED/FastLED)
+
